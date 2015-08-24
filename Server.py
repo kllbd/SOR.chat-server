@@ -15,12 +15,12 @@ def handle(connection, address):
     try:
         logger.debug("Connected %r at %r", connection, address)
         while True:
-            data = connection.recv(BUF_SIZE)
+            data = connection.recv(BUF_SIZE).decode(DEFAULT_ENCODING)
             if data == "":
                 logger.debug("Socket closed remotely")
                 break
             logger.debug("Received data %r", data)
-            connection.sendall(data)
+            connection.sendall(data.encode(DEFAULT_ENCODING))
             logger.debug("Sent data")
     except:
         logger.exception("Problem handling request")

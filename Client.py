@@ -10,7 +10,7 @@ if __name__ == "__main__":
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((HOST, PORT))
     data = "some data"
-    sock.sendall(data)
+    sock.sendall(data.encode(DEFAULT_ENCODING))
     result = sock.recv(BUF_SIZE)
-    print(result)
+    print(result.decode(DEFAULT_ENCODING))
     sock.close()

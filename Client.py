@@ -2,15 +2,17 @@ import socket
 
 HOST = 'localhost'
 PORT = 9000
-MAX_CLIENTS = 5
 BUF_SIZE = 1024
 DEFAULT_ENCODING = 'ascii'
 
 if __name__ == "__main__":
+    command = ''
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((HOST, PORT))
-    data = "some data"
-    sock.sendall(data.encode(DEFAULT_ENCODING))
-    result = sock.recv(BUF_SIZE)
-    print(result.decode(DEFAULT_ENCODING))
+    while command != 'exit':
+        command = input('Type your message: ')
+        if command != 'exit':
+            sock.sendall(command.encode(DEFAULT_ENCODING))
+            result = sock.recv(BUF_SIZE)
+            print(result.decode(DEFAULT_ENCODING))
     sock.close()

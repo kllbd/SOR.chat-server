@@ -11,7 +11,7 @@ DEFAULT_ENCODING = 'ascii'
 def handle(connection, address):
     import logging
     logging.basicConfig(level=logging.DEBUG)
-    logger = logging.getLogger("process-%r" % (address,))
+    logger = logging.getLogger("user%r" % address[1])
     try:
         logger.debug("Connected %r at %r", connection, address)
         while True:

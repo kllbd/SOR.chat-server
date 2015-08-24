@@ -1,6 +1,12 @@
 import multiprocessing
 import socket
 
+HOST = 'localhost'
+PORT = 9000
+MAX_CLIENTS = 5
+BUF_SIZE = 1024
+DEFAULT_ENCODING = 'ascii'
+
 
 def handle(connection, address):
     import logging
@@ -9,7 +15,7 @@ def handle(connection, address):
     try:
         logger.debug("Connected %r at %r", connection, address)
         while True:
-            data = connection.recv(1024)
+            data = connection.recv(BUF_SIZE)
             if data == "":
                 logger.debug("Socket closed remotely")
                 break
@@ -47,7 +53,7 @@ class Server(object):
 if __name__ == "__main__":
     import logging
     logging.basicConfig(level=logging.DEBUG)
-    server = Server("0.0.0.0", 9000)
+    server = Server(HOST, PORT)
     try:
         logging.info("Listening")
         server.start()

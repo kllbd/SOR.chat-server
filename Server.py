@@ -52,8 +52,8 @@ class Server(object):
 if __name__ == "__main__":
     server = Server(HOST, PORT)
     try:
-        server.start()
         print("Listening to port %s at %s" % server.port, server.hostname)
+        server.start()
     except:
         print("Unexpected exception")
     finally:

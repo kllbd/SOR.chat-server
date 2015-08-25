@@ -35,9 +35,10 @@ def handle(connection, address):
                 clients.remove(username)
 
 
-def broadcast(username, msg):  # Send a message to all connected clients
+def broadcast(author, msg):  # Send a message to all connected clients
     for client in clients:
-        client[1].sendall((username + ": " + msg).encode(DEFAULT_ENCODING))
+        if client[0] != author:
+            client[1].sendall((author + ": " + msg).encode(DEFAULT_ENCODING))
 
 
 class Server(object):

@@ -23,7 +23,7 @@ def handle(connection, address):
                 if data == "":
                     print("Socket closed remotely for {}".format(username))
                     break
-                print("{}: {}".format(username, data))
+                print(">> {}: {}".format(username, data))
         except:
             print("Problem handling request from {}".format(username))
         finally:

@@ -6,7 +6,7 @@ PORT = 9000
 MAX_CLIENTS = 5
 BUF_SIZE = 1024
 DEFAULT_ENCODING = "ascii"
-clients = []
+clients = []  # This will hold a pair of string and socket object.
 
 
 def handle(connection, address):
@@ -15,7 +15,7 @@ def handle(connection, address):
         connection.close()
     else:
         username = "User" + str(len(clients) + 1)
-        clients.append(username)
+        clients.append((username, connection))
         try:
             print("{} is connected at {}".format(username, address[0]))
             while True:
@@ -23,6 +23,7 @@ def handle(connection, address):
                 if data == "":
                     print("Socket closed remotely for {}".format(username))
                     break
+                broadcast(username, data)
                 print(">> {}: {}".format(username, data))
         except:
             print("Problem handling request from {}".format(username))
@@ -31,6 +32,11 @@ def handle(connection, address):
             connection.close()
             if username in clients:
                 clients.remove(username)
+
+
+def broadcast(username, msg):  # Send a message to all connected clients
+    for client in clients:
+        client[1].sendall((username + ": " + msg).encode(DEFAULT_ENCODING))
 
 
 class Server(object):

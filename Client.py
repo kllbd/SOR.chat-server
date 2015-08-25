@@ -13,6 +13,4 @@ if __name__ == "__main__":
         command = input('Type your message: ')
         if command != 'exit':
             sock.sendall(command.encode(DEFAULT_ENCODING))
-            result = sock.recv(BUF_SIZE)
-            print(result.decode(DEFAULT_ENCODING))
     sock.close()

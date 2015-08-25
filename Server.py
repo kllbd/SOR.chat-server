@@ -1,11 +1,11 @@
 import multiprocessing
 import socket
 
-HOST = 'localhost'
+HOST = "localhost"
 PORT = 9000
 MAX_CLIENTS = 5
 BUF_SIZE = 1024
-DEFAULT_ENCODING = 'ascii'
+DEFAULT_ENCODING = "ascii"
 clients = []
 
 
@@ -14,20 +14,20 @@ def handle(connection, address):
         connection.sendall("Server is full!".encode(DEFAULT_ENCODING))
         connection.close()
     else:
-        username = 'User' + str(len(clients) + 1)
+        username = "User" + str(len(clients) + 1)
         clients.append(username)
         try:
-            print("%s is connected at %s", username, address[0])
+            print("{} is connected at {}".format(username, address[0]))
             while True:
                 data = connection.recv(BUF_SIZE).decode(DEFAULT_ENCODING)
                 if data == "":
-                    print("Socket closed remotely for %s" % username)
+                    print("Socket closed remotely for {}".format(username))
                     break
-                print("%s: %s", username, data)
+                print("{}: {}".format(username, data))
         except:
-            print("Problem handling request from %s" % username)
+            print("Problem handling request from {}".format(username))
         finally:
-            print("Closing socket for %s" % username)
+            print("Closing socket for {}".format(username))
             connection.close()
 
 
@@ -47,19 +47,19 @@ class Server(object):
             process = multiprocessing.Process(target=handle, args=(conn, address))
             process.daemon = True
             process.start()
-            print("New client being handled at process %r", process)
+            print("New client being handled at process {}".format(process))
 
 if __name__ == "__main__":
     server = Server(HOST, PORT)
     try:
-        print("Listening to port %s at %s" % server.port, server.hostname)
+        print("Listening to port {} at {}".format(str(server.port), server.hostname))
         server.start()
-    except:
-        print("Unexpected exception")
+    except Exception as ex:
+        print("Error: " + ex.__str__())
     finally:
         print("Shutting down")
         for process in multiprocessing.active_children():
-            print("Shutting down process %r", process)
+            print("Shutting down process {}".format(process))
             process.terminate()
             process.join()
     print("All done")

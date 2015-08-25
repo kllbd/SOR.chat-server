@@ -29,6 +29,8 @@ def handle(connection, address):
         finally:
             print("Closing socket for {}".format(username))
             connection.close()
+            if username in clients:
+                clients.remove(username)
 
 
 class Server(object):

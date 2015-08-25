@@ -14,61 +14,52 @@ def handle(connection, address):
         connection.sendall("Server is full!".encode(DEFAULT_ENCODING))
         connection.close()
     else:
-        clients.append('User' + str(len(clients) + 1))
-        import logging
-        logging.basicConfig(level=logging.DEBUG)
-        logger = logging.getLogger("user%r" % address[1])
+        username = 'User' + str(len(clients) + 1)
+        clients.append(username)
         try:
-            logger.debug("Connected %r at %r", connection, address)
+            print("%s is connected at %s", username, address[0])
             while True:
                 data = connection.recv(BUF_SIZE).decode(DEFAULT_ENCODING)
                 if data == "":
-                    logger.debug("Socket closed remotely")
+                    print("Socket closed remotely for %s" % username)
                     break
-                logger.debug("Received data %r", data)
-                connection.sendall(data.encode(DEFAULT_ENCODING))
-                logger.debug("Sent data")
+                print("%s: %s", username, data)
         except:
-            logger.exception("Problem handling request")
+            print("Problem handling request from %s" % username)
         finally:
-            logger.debug("Closing socket")
+            print("Closing socket for %s" % username)
             connection.close()
 
 
 class Server(object):
     def __init__(self, hostname, port):
-        import logging
-        self.logger = logging.getLogger("server")
         self.hostname = hostname
         self.port = port
 
     def start(self):
-        self.logger.debug("listening")
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.bind((self.hostname, self.port))
         self.socket.listen(1)
 
         while True:
             conn, address = self.socket.accept()
-            self.logger.debug("Got connection")
+            print("New connection received. Starting thread to handle it.")
             process = multiprocessing.Process(target=handle, args=(conn, address))
             process.daemon = True
             process.start()
-            self.logger.debug("Started process %r", process)
+            print("New client being handled at process %r", process)
 
 if __name__ == "__main__":
-    import logging
-    logging.basicConfig(level=logging.DEBUG)
     server = Server(HOST, PORT)
     try:
-        logging.info("Listening")
         server.start()
+        print("Listening to port %s at %s" % server.port, server.hostname)
     except:
-        logging.exception("Unexpected exception")
+        print("Unexpected exception")
     finally:
-        logging.info("Shutting down")
+        print("Shutting down")
         for process in multiprocessing.active_children():
-            logging.info("Shutting down process %r", process)
+            print("Shutting down process %r", process)
             process.terminate()
             process.join()
-    logging.info("All done")
+    print("All done")

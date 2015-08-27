@@ -50,7 +50,7 @@ def handle(connection, address):
                 data = connection.recv(BUF_SIZE).decode(DEFAULT_ENCODING)
                 if data == "":
                     print("Socket closed remotely for {}".format(username))
-                    broadcast("SERVER", username + " disconnected.")
+                    quit_broadcast(username)
                     break
                 broadcast(username, data)
                 print(">> {}: {}".format(username, data))
@@ -59,6 +59,7 @@ def handle(connection, address):
         finally:
             print("Closing socket for {}".format(username))
             connection.close()
+            quit_broadcast(username)
             remove_client(username)
 
 
@@ -66,6 +67,12 @@ def broadcast(author, msg):  # Send a message to all connected clients
     for client in connected_clients:
         if client[0] != author:
             client[1].sendall((author + ": " + msg).encode(DEFAULT_ENCODING))
+
+
+def quit_broadcast(user):  # Inform all other clients someone has left.
+    for client in connected_clients:
+        if client[0] != user:
+            client[1].sendall(("SERVER: " + user + " disconnected.").encode(DEFAULT_ENCODING))
 
 
 class Server(object):

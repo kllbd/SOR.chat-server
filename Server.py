@@ -6,25 +6,25 @@ PORT = 9000
 MAX_CLIENTS = 5
 BUF_SIZE = 1024
 DEFAULT_ENCODING = "ascii"
-clients = []  # This will hold pairs of string and socket object.
+connected_clients = []  # This will hold pairs of string and socket object.
 
 
 def login(sock):
-    username = "User" + str(len(clients) + 1)
-    num = len(clients) + 1
+    username = "User" + str(len(connected_clients) + 1)
+    num = len(connected_clients) + 1
     while islogged(username):  # While there's already an user with this name, change it.
         num += 1
         username = "User" + str(num)
     client = (username, sock)
-    if client not in clients:
-        clients.append(client)
+    if client not in connected_clients:
+        connected_clients.append(client)
 
     return username
 
 
 def islogged(username):
     result = False
-    for client in clients:
+    for client in connected_clients:
         if client[0] == username:
             result = True
             break
@@ -32,13 +32,13 @@ def islogged(username):
 
 
 def remove_client(usr):
-    for client in clients:
+    for client in connected_clients:
         if client[0] == usr:
-            clients.remove(client)
+            connected_clients.remove(client)
 
 
 def handle(connection, address):
-    if len(clients) >= MAX_CLIENTS:
+    if len(connected_clients) >= MAX_CLIENTS:
         connection.sendall("Server is full!".encode(DEFAULT_ENCODING))
         connection.close()
     else:
@@ -63,7 +63,7 @@ def handle(connection, address):
 
 
 def broadcast(author, msg):  # Send a message to all connected clients
-    for client in clients:
+    for client in connected_clients:
         if client[0] != author:
             client[1].sendall((author + ": " + msg).encode(DEFAULT_ENCODING))
 

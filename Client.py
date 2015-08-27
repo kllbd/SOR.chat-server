@@ -4,7 +4,7 @@ import threading
 HOST = 'localhost'
 PORT = 9000
 BUF_SIZE = 1024
-DEFAULT_ENCODING = 'ascii'
+DEFAULT_ENCODING = 'utf-8'
 connected = False
 
 

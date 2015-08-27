@@ -5,7 +5,7 @@ HOST = "localhost"
 PORT = 9000
 MAX_CLIENTS = 5
 BUF_SIZE = 1024
-DEFAULT_ENCODING = "ascii"
+DEFAULT_ENCODING = "utf-8"
 connected_clients = []  # This will hold pairs of string and socket object.
 
 

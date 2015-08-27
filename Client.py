@@ -17,10 +17,12 @@ def get_valid_msg():
 
 
 def recv_from_server(conn, addr):
+    global connected
     try:
-        while 1:
+        while len(data) > 1:
             data = conn.recv(BUF_SIZE).decode(DEFAULT_ENCODING)
             print(data)
+        connected = False
     except:
         connected = False
 
@@ -37,5 +39,7 @@ if __name__ == "__main__":
         while connected:
             msg = get_valid_msg()
             sock.sendall(msg.encode(DEFAULT_ENCODING))
+        print("Exiting")
     except:
         connected = False
+        print("Error. Exiting.")

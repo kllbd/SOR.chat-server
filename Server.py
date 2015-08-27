@@ -1,12 +1,24 @@
-import multiprocessing
 import socket
+import threading
 
 HOST = "localhost"
 PORT = 9000
 MAX_CLIENTS = 5
 BUF_SIZE = 1024
 DEFAULT_ENCODING = "ascii"
-clients = []  # This will hold a pair of string and socket object.
+clients = []  # This will hold pairs of string and socket object.
+
+
+def add_client(usr, sock):
+    to_add = (usr, sock)
+    if to_add not in clients:
+        clients.append(to_add)
+
+
+def remove_client(usr):
+    for client in clients:
+        if client[0] == usr:
+            del client
 
 
 def handle(connection, address):
@@ -15,14 +27,15 @@ def handle(connection, address):
         connection.close()
     else:
         username = "User" + str(len(clients) + 1)
-        clients.append((username, connection))
+        add_client(username, connection)
+        print("{} is connected at {}".format(username, address[0]))
+        broadcast("SERVER", username + " connected.")
         try:
-            print("{} is connected at {}".format(username, address[0]))
             while True:
                 data = connection.recv(BUF_SIZE).decode(DEFAULT_ENCODING)
                 if data == "":
                     print("Socket closed remotely for {}".format(username))
-                    broadcast(username, username + " disconnected.")
+                    broadcast("SERVER", username + " disconnected.")
                     break
                 broadcast(username, data)
                 print(">> {}: {}".format(username, data))
@@ -31,8 +44,7 @@ def handle(connection, address):
         finally:
             print("Closing socket for {}".format(username))
             connection.close()
-            if username in clients:
-                clients.remove(username)
+            remove_client(username)
 
 
 def broadcast(author, msg):  # Send a message to all connected clients
@@ -54,22 +66,16 @@ class Server(object):
         while True:
             conn, address = self.socket.accept()
             print("New connection received. Starting thread to handle it.")
-            process = multiprocessing.Process(target=handle, args=(conn, address))
-            process.daemon = True
+            process = threading.Thread(target=handle, args=(conn, address))
             process.start()
-            print("New client being handled at process {}".format(process))
+            print("New client being handled at thread: {}".format(process))
 
 if __name__ == "__main__":
     server = Server(HOST, PORT)
     try:
-        print("Listening to port {} at {}".format(str(server.port), server.hostname))
+        print("Server is active and listening to port {} at {}".format(str(server.port), server.hostname))
         server.start()
     except Exception as ex:
         print("Error: " + ex.__str__())
     finally:
         print("Shutting down")
-        for process in multiprocessing.active_children():
-            print("Shutting down process {}".format(process))
-            process.terminate()
-            process.join()
-    print("All done")

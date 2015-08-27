@@ -9,16 +9,32 @@ DEFAULT_ENCODING = "ascii"
 clients = []  # This will hold pairs of string and socket object.
 
 
-def add_client(usr, sock):
-    to_add = (usr, sock)
-    if to_add not in clients:
-        clients.append(to_add)
+def login(sock):
+    username = "User" + str(len(clients) + 1)
+    num = len(clients) + 1
+    while islogged(username):  # While there's already an user with this name, change it.
+        num += 1
+        username = "User" + str(num)
+    client = (username, sock)
+    if client not in clients:
+        clients.append(client)
+
+    return username
+
+
+def islogged(username):
+    result = False
+    for client in clients:
+        if client[0] == username:
+            result = True
+            break
+    return result
 
 
 def remove_client(usr):
     for client in clients:
         if client[0] == usr:
-            del client
+            clients.remove(client)
 
 
 def handle(connection, address):
@@ -26,8 +42,7 @@ def handle(connection, address):
         connection.sendall("Server is full!".encode(DEFAULT_ENCODING))
         connection.close()
     else:
-        username = "User" + str(len(clients) + 1)
-        add_client(username, connection)
+        username = login(connection)
         print("{} is connected at {}".format(username, address[0]))
         broadcast("SERVER", username + " connected.")
         try:

@@ -1,4 +1,4 @@
-# Forking Server
+# Chat Server
 
 Trabalho da cadeira SOR. Servidor de chat com threads e seus clientes.
 

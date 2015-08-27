@@ -91,7 +91,7 @@ class Server(object):
     def start(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.bind((self.hostname, self.port))
-        self.socket.listen(1)
+        self.socket.listen(5)
 
         while True:
             conn, address = self.socket.accept()

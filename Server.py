@@ -44,7 +44,7 @@ def handle(connection, address):
     else:
         username = login(connection)
         print("{} is connected at {}".format(username, address[0]))
-        broadcast("SERVER", username + " connected.")
+        login_broadcast(username)
         try:
             while True:
                 data = connection.recv(BUF_SIZE).decode(DEFAULT_ENCODING)
@@ -73,6 +73,12 @@ def quit_broadcast(user):  # Inform all other clients someone has left.
     for client in connected_clients:
         if client[0] != user:
             client[1].sendall(("SERVER: " + user + " disconnected.").encode(DEFAULT_ENCODING))
+
+
+def login_broadcast(user):
+    for client in connected_clients:
+        if client[0] != user:
+            client[1].sendall(("SERVER: " + user + " connected.").encode(DEFAULT_ENCODING))
 
 
 class Server(object):

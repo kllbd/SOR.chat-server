@@ -19,7 +19,7 @@ def get_valid_msg():
 def recv_from_server(conn, addr):
     global connected
     try:
-        while len(data) > 1:
+        while 1:
             data = conn.recv(BUF_SIZE).decode(DEFAULT_ENCODING)
             print(data)
         connected = False

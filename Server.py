@@ -49,7 +49,7 @@ def handle(connection, address):
             while True:
                 if len(connected_clients) < 2:
                     connection.sendall(
-                        "You're alone right now. Wait for someone else to connect.".encode(DEFAULT_ENCODING))
+                        "SERVER: You're alone right now. Wait for someone else to connect.".encode(DEFAULT_ENCODING))
                 data = connection.recv(BUF_SIZE).decode(DEFAULT_ENCODING)
                 if data == "":
                     print("Socket closed remotely for {}".format(username))

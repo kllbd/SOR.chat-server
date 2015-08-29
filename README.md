@@ -1,6 +1,9 @@
 # Chat Server
 
-Trabalho da cadeira SOR. Servidor de chat com threads e seus clientes.
+Trabalho da cadeira SOR. Corresponde à segunda etapa no aprendizado sobre sockets.
+
+### Resumo do objetivo
+Servidor de chat com threads e seus clientes.
 
 ### Requisitos
 

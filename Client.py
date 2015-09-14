@@ -1,7 +1,7 @@
 import socket
 import threading
 
-HOST = 'localhost'
+HOST = 'tkpy.cloudapp.net'
 PORT = 9000
 BUF_SIZE = 1024
 DEFAULT_ENCODING = 'utf-8'

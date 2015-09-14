@@ -44,6 +44,7 @@ def asknewserver():
 
 if __name__ == "__main__":
     command = ''
+    asknewserver()
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((HOST, PORT))
     connected = True

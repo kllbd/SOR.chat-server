@@ -26,6 +26,22 @@ def recv_from_server(conn, addr):
     except:
         connected = False
 
+
+def asknewserver():
+    global HOST
+    answer = 'no'
+    print("Want to connect to a different server?\n")
+    answer = input()
+    if answer.isalpha() and len(answer) > 0:
+        if answer == 'yes':
+            HOST = input("Type the server address: ")
+        elif answer == 'y':
+            HOST = input("Type the server address: ")
+        else:
+            print("Continuing with server: " + HOST)
+    else:
+        print("Continuing with server: " + HOST)
+
 if __name__ == "__main__":
     command = ''
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
